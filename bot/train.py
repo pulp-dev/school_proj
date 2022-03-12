@@ -21,4 +21,4 @@ class Train:
         dbq = DataBaseQuery()
         exercise = dbq.get_ex_by_id(id)
         await message.answer(exercise['ex_text'])
-        await message.answer('Ответ:', '<tg-spoiler>' + exercise['answer'] + '</tg-spoiler>', parse_mode=types.ParseMode.HTML)
+        await message.answer('Ответ: ' + '<tg-spoiler>' + exercise['answer'] + '</tg-spoiler>', parse_mode=types.ParseMode.HTML)
