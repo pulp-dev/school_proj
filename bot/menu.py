@@ -47,6 +47,14 @@ class Menu:
 
         await self.send_menu(message)
 
+    async def send_exercise_menu(self, message: types.Message):
+
+        """
+        Отправка меню тренажера
+        """
+        self.kb.add(*self.kb_buttons)
+        await message.answer(self.msg_text, reply_markup=self.kb)
+
     async def send_photos(self, message: types.Message):
 
         """

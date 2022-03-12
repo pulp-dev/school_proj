@@ -36,3 +36,14 @@ CREATE TABLE liked
 	FOREIGN KEY (user_id) REFERENCES users (id),
 	FOREIGN KEY (rule_id) REFERENCES rules (id)
 )
+
+DROP TABLE IF EXISTS exercises;
+
+CREATE TABLE exercises
+(
+	id bigint UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	ex_type varchar(60) NOT NULL,
+	ex_text varchar(4096) NOT NULL,
+	answer varchar(4096) NOT NULL
+)
+

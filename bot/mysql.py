@@ -209,3 +209,20 @@ class DataBaseQuery:
         result = self.cur.fetchall()
 
         return result[0]['rule_type']
+
+    # exercises methods
+    def get_ex_ides_by_type(self, type):
+        """
+        Все id упражнений типа type
+        """
+        self.cur.execute(f"select id from exercises where ex_type = '{type}'")
+        return self.cur.fetchall()
+
+    def get_ex_by_id(self, id):
+        """
+        Получить упражнение по id
+        """
+        self.cur.execute(f"select * from exercises where id = {id}")
+        result = self.cur.fetchall()
+
+        return result[0]

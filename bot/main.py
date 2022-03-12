@@ -1,13 +1,19 @@
+# bot
 import asyncio
 import aiogram as aig
 from aiogram import types
 import logging
 
+# OS
 import os
 
+# DataBase
 from mysql import DataBaseQuery
+
+# Others
 import config
 from menu import Menu
+from train import Train
 
 
 async def main():
@@ -42,7 +48,7 @@ async def main():
         menu_ex = Menu(text, kb, buttons)
         await menu_ex.send_menu(message)
 
-    # далее идут кнопки главного меню
+    # далее кнопки главного меню
     @dp.callback_query_handler(text='more')
     async def more_menu(call: types.CallbackQuery):
 
@@ -116,11 +122,25 @@ async def main():
     async def train(call: types.CallbackQuery):
 
         """
-        Не сделанная кнопка "💪 Тренажер"
+        Кнопка "💪 Тренажер"
         :param call:
         """
+        text = 'Выберите на какой раздел языка вы хотите выполнить упражнения.'
+        kb = types.InlineKeyboardMarkup()
+        buttons = [types.InlineKeyboardButton(text='Орфография', callback_data='spelling_button'),
+                   types.InlineKeyboardButton(text='Пунктуация', callback_data='punctuation_button'),
+                   types.InlineKeyboardButton(text='Орфоэпия', callback_data='pronunciation_button'),
+                   types.InlineKeyboardButton(text='👈 назад', callback_data='start')]
 
-        await call.message.answer('Скоро ...')
+        menu_ex = Menu(text, kb, buttons)
+        await menu_ex.send_exercise_menu(call.message)
+
+    @dp.callback_query_handler(lambda call: call.data in ['spelling_button', 'punctuation_button',
+                                                          'pronunciation_button'])
+    async def send_ex(call: types.CallbackQuery):
+        train_ex = Train(call.data)
+        train_ex.fit()
+        await train_ex.send_random_ex(call.message)
 
     # далее идут кнопки навигации по разделам русского языка
     @dp.callback_query_handler(text='spelling')
