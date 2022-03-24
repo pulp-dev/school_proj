@@ -11,14 +11,26 @@ class Train:
         self.ex_ides = []
 
     def fit(self):
+        """
+        получение списка id упражнений из БД
+        """
         dbq = DataBaseQuery()
         callback_data_ex = dbq.get_ex_ides_by_type(self.callback_data)
         for i in callback_data_ex:
             self.ex_ides.append(i['id'])
 
     async def send_random_ex(self, message: types.Message):
+        """
+        отправка случайного сообщения
+        """
+        kb = types.InlineKeyboardMarkup()
+        buttons = [types.InlineKeyboardButton(text='👈 назад', callback_data='train'),
+                   types.InlineKeyboardButton(text='🔁 следущий', callback_data=self.callback_data)]
+        kb.add(*buttons)
+
         id = self.ex_ides[randint(0, len(self.ex_ides) - 1)]
         dbq = DataBaseQuery()
         exercise = dbq.get_ex_by_id(id)
         await message.answer(exercise['ex_text'])
-        await message.answer('Ответ: ' + '<tg-spoiler>' + exercise['answer'] + '</tg-spoiler>', parse_mode=types.ParseMode.HTML)
+        await message.answer('Ответ: ' + '<tg-spoiler>' + exercise['answer'] + '</tg-spoiler>',
+                             parse_mode=types.ParseMode.HTML, reply_markup=kb)
